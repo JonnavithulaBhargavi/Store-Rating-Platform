@@ -1,0 +1,83 @@
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthContext';
+
+// Auth Components
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import UpdatePassword from './pages/UpdatePassword';
+
+// Protected Routes
+import { 
+  ProtectedRoute, 
+  AdminRoute, 
+  StoreOwnerRoute, 
+  NormalUserRoute, 
+  UnauthorizedPage 
+} from './components/ProtectedRoute';
+
+// Layout Components
+import AppLayout from './components/AppLayout';
+
+// User Pages
+import UserDashboard from './pages/user/Dashboard';
+import StoreList from './pages/user/StoreList';
+
+// Admin Pages 
+import AdminDashboard from './pages/admin/Dashboard';
+import AdminUserList from './pages/admin/UserList';
+import AdminStoreList from './pages/admin/StoreList';
+import AdminAddUser from './pages/admin/AddUser';
+import AdminAddStore from './pages/admin/AddStore';
+
+// Store Owner Pages
+import StoreOwnerDashboard from './pages/storeOwner/Dashboard';
+
+function App() {
+  return (
+    <AuthProvider>
+      <Router>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/unauthorized" element={<UnauthorizedPage />} />
+          <Route path="/" element={<Navigate to="/login" replace />} />
+
+          {/* Protected Routes (require authentication) */}
+          <Route element={<ProtectedRoute />}>
+            <Route element={<AppLayout />}>
+              {/* Common to all users */}
+              <Route path="/update-password" element={<UpdatePassword />} />
+              
+              {/* Admin Routes */}
+              <Route element={<AdminRoute />}>
+                <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                <Route path="/admin/users" element={<AdminUserList />} />
+                <Route path="/admin/stores" element={<AdminStoreList />} />
+                <Route path="/admin/add-user" element={<AdminAddUser />} />
+                <Route path="/admin/add-store" element={<AdminAddStore />} />
+              </Route>
+              
+              {/* Store Owner Routes */}
+              <Route element={<StoreOwnerRoute />}>
+                <Route path="/store-owner/dashboard" element={<StoreOwnerDashboard />} />
+              </Route>
+              
+              {/* Normal User Routes */}
+              <Route element={<NormalUserRoute />}>
+                <Route path="/dashboard" element={<UserDashboard />} />
+                <Route path="/stores" element={<StoreList />} />
+              </Route>
+            </Route>
+          </Route>
+
+          {/* Catch all - redirect to login */}
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
+  );
+}
+
+export default App;

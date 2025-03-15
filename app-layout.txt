@@ -1,0 +1,30 @@
+import React, { useState } from 'react';
+import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+
+const AppLayout = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { currentUser, logout, isAdmin, isStoreOwner, isNormalUser } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/login');
+  };
+
+  // Helper function to check if a link is active
+  const isActive = (path) => {
+    return location.pathname === path;
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-100">
+      {/* Mobile menu */}
+      <div className={`${sidebarOpen ? 'block' : 'hidden'} fixed inset-0 flex z-40 lg:hidden`} role="dialog" aria-modal="true">
+        {/* Overlay */}
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-75" aria-hidden="true" onClick={() => setSidebarOpen(false)}></div>
+        
+        {/* Sidebar */}
+        <div className="relative flex-1 flex flex-col max-w-xs w-full bg-white focus:outline-none">
+          <div className="absolute top-0 right-0 -
