@@ -1,8 +1,5 @@
 Installation
 
-# Clone repository
-git clone https://github.com/yourusername/store-rating-app.git
-cd store-rating-app
 
 # Install dependencies
 npm install
